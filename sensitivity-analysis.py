@@ -15,9 +15,9 @@ import pandas as pd
 class Arguments:
     def __init__(self):
         self.equations = ['x_1 + x_2 <= 6', 'x_1 - x_2 <= 0']
-        self.obj_atrributes = [60, 30, 20]  # [5, 2] #an array of objective function coefficients----------5x_1 + 2x_2
-        self.decision_variable_rhs = [48, 20, 8]  # [6, 0] # right-hand side entries
-        self.decision_variable_lhs = [[8, 6, 1],[4, 2, 1.5], [2, 1.5, 0.5] ]  # [[1, 1],[1, -1 ]] #coefficients for the left-hand-sides of the constraints
+        self.obj_atrributes = [2, 1, -1]  # [5, 2] #an array of objective function coefficients----------5x_1 + 2x_2
+        self.decision_variable_rhs = [8, 4]  # [6, 0] # right-hand side entries
+        self.decision_variable_lhs = [[1, 2, 1],[-1, 1, -2] ]  # [[1, 1],[1, -1 ]] #coefficients for the left-hand-sides of the constraints
         self.no_equations = len(self.decision_variable_lhs)
         self.no_variables = len(self.decision_variable_lhs[0])
         self.lowbound = "x1, x2 >= 0"
@@ -239,15 +239,13 @@ class SensitivityAnalysis:
         self._B_X = [s for s in self.__standform.variables[1:] if s not in self.__standform.basic_variables]
         self._B_Inverse_Aj = [self.__final_tableau[nbv].values.tolist()[1:] for nbv in self.__Xnbv]
         self.__rhs = self.__standform.rhs[1:]
-        print(self._B_inverse)
-        print(self._B_Inverse_Aj)
 
         self.changes_objective_function_basics()
         self.changes_objective_function_nonbasics()
         self.changes_rhs()
 
     def CbBinverseAj_multiplication(self, added_delta, bvindex, bv):
-        matrixCbBinv = [[] for i in range(len(added_delta))]
+        matrixCbBinv = [[] for i in range(len(self._B_Inverse_Aj))]
         deltaval = list()
         for row in range(len(added_delta)):
             for col in range(len(self._B_Inverse_Aj)):
@@ -312,7 +310,7 @@ class SensitivityAnalysis:
                 delta_range = self.__finddeltaranges(matrixCbBinv)
                 added_delta[bvindex] = str(bv) + " + \u0394"
                 print('----------------------------------------------------------------')
-                print("Changing the objective function coefficient of a basic variable")
+                print("UnChanging the objective function coefficient of a basic variable")
                 print(delta_range[0], " <= \u0394 <=", delta_range[1], " for ", added_delta)
                 if not delta_range[0] and delta_range[1]:
                     print("Cbv <=", delta_range[1] + bv)
@@ -340,16 +338,16 @@ class SensitivityAnalysis:
                 added_delta[bvindex] = str(nbv) + "+ \u0394"
                 if newDelta > 0:
                     print('-----------------------------------------------------------------')
-                    print("Changing the objective function coefficient of a non basic variable")
+                    print(" UnChanging the objective function coefficient of a non basic variable")
                     print("\u0394 <= ", newDelta)
-                    print("C{number}".format(number=bvindex), "for ", added_delta)
+                    print(nbv+newDelta," => C{number}".format(number=bvindex), "for ", added_delta, "-- ",nbv+newDelta)
                     print('-----------------------------------------------------------------')
 
                 else:
                     print('-----------------------------------------------------------------')
-                    print("Changing the objective function coefficient of a non basic variable")
+                    print("not Changing the objective function coefficient of a non basic variable")
                     print(newDelta, "<= \u0394")
-                    print("C{number}".format(number=bvindex), "for ", added_delta)
+                    print(nbv+newDelta," <= C{number}".format(number=bvindex), "for ", added_delta)
                     print('-----------------------------------------------------------------')
 
     def b_inverse_multiply_B(self, added_delta, bvindex, rhs_coeff):
@@ -390,7 +388,7 @@ class SensitivityAnalysis:
             delta_range = self.__finddeltaranges(matrixCbBinv)
             added_delta[bvindex] = str(rhs_coeff) + " + \u0394"
             print('----------------------------------------------------------------')
-            print("Changing right hand side")
+            print("UnChanging right hand side")
             print(delta_range[0], " <= \u0394 <=", delta_range[1], " for ", added_delta)
             if not delta_range[0] and delta_range[1]:
                 print("b <=", delta_range[1] + rhs_coeff)
