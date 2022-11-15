@@ -1,6 +1,8 @@
+
+
 '''
-BlandSimplex built to return an optimal basic feasible solution and its value
-1. Simplex method - Bland Rule
+built to return an optimal basic feasible solution and its value
+1. Simplex method - Maximization
 2. Argument object holds
       an array of objective function coefficients
       right-hand side entries
@@ -14,9 +16,9 @@ import pandas as pd
 class Arguments:
     def __init__(self):
         self.equations = ['x_1 + x_2 <= 6', 'x_1 - x_2 <= 0']
-        self.obj_atrributes = [3, 2, 4]  # [5, 2] #an array of objective function coefficients----------5x_1 + 2x_2
-        self.decision_variable_rhs = [9, 18, -18, -7]  # [6, 0] # right-hand side entries
-        self.decision_variable_lhs = [[1, 1, 1], [3, 1, 4], [-3, -1, -4], [-1, -2, 0]]  # [[1, 1],[1, -1 ]] #coefficients for the left-hand-sides of the constraints
+        self.obj_atrributes = [8, 5]  # [5, 2] #an array of objective function coefficients----------5x_1 + 2x_2
+        self.decision_variable_rhs = [6, 45]  # [6, 0] # right-hand side entries
+        self.decision_variable_lhs = [[1, 1], [9, 5]]  # [[1, 1],[1, -1 ]] #coefficients for the left-hand-sides of the constraints
         self.no_equations = len(self.decision_variable_lhs)
         self.no_variables = len(self.decision_variable_lhs[0])
         self.lowbound = "x1, x2 >= 0"
@@ -40,7 +42,7 @@ class ConvertIntoStandardForm:
         self.table_columns = self.variables + ['rhs', 'BV']
 
 
-class BlandSimplex:
+class MaximizationSimplex:
     def __init__(self):
         self.obj = Arguments()
         self.stdform = ConvertIntoStandardForm()
@@ -177,7 +179,7 @@ class BlandSimplex:
             coef_row0 = min(self.stdform.row_0_lhs)
             if coef_row0 < 0:
                 entering_idx = self.stdform.row_0_lhs.index(coef_row0)
-                print(entering_idx, 'entering', self.stdform.rows_lhs)
+                #print(entering_idx, 'entering', self.stdform.rows_lhs)
                 res = self.calculate_ratio_quantities_replacements(entering_idx)
                 if res == None:
                     print('------------------------------------------------------------------------------------')
@@ -214,5 +216,4 @@ class BlandSimplex:
             print(df)
 
 
-BlandSimplex()
-
+MaximizationSimplex()
