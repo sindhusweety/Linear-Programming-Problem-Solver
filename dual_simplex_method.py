@@ -7,11 +7,11 @@ import pandas as pd
 
 class DualPreprocessing:
     def __init__(self):
-        self._legal_tableau = [["w", "y_1", "y_2", "e_1", "e_2", "e_3", "rhs", "bv"],
-                                [1, 8, 4, 0, 0, 0, 0, "w"],
-                                [0, -1, 1, 1, 0, 0, -2, "e_1" ],
-                                [0, -2, -1, 0, 1, 0, -1, "e_2"],
-                               [0, -1, 2, 0, 0, 1, 1, "e_3"]]
+        self._legal_tableau = [["w", "y_1", "y_2", "y_3", "e_1", "e_2", "e_3", "rhs", "bv"],
+                                [1, 9, 18, 7, 0, 0, 0, 0, "w"],
+                                [0, -1, -3, -1, 1, 0, 0, -3, "e_1" ],
+                                [0, -1, -1, -2, 0, 1, 0, -2, "e_2"],
+                                [0, -1, -4,  0, 0, 0, 1, -4, "e_3"]]
 
 class DualSimplexMethod:
     def __init__(self):
@@ -31,18 +31,19 @@ class DualSimplexMethod:
         count = 0
         pivot_index = 0
         MIN = 0
+
         for indx, ele in enumerate(pivot_row[:-1]):
             if ele < 0:
-                ratio = round(self.__row_0[indx]/ele, 2)
+                ratio = round(self.__row_0[:-1][indx]/ele, 2)
                 if count == 0:
                     MIN = ratio
                     pivot_index = indx
                 else:
-                    print(MIN, ratio)
+                    #print(MIN, ratio, ele, self.__row_0[:-1][indx])
                     if MIN < ratio:
                         MIN = ratio
                         pivot_index = indx
-                        print(ratio, 'ji')
+                        #print(ratio, 'ji')
                 count += 1
 
         pivot_element = pivot_row[pivot_index]
@@ -95,8 +96,9 @@ class DualSimplexMethod:
 
 
     def _to_positive_coeff(self):
+        print(self.__rhs[1:])
         if [__v for __v in self.__rhs[1:] if __v < 0]:
-            smallest_ele = min(self.__rhs)
+            smallest_ele = min(self.__rhs[1:])
             leaving_idx_row = self.__rhs[1:].index(smallest_ele)
             self.calculate_ratio_quantities_replacements(leaving_idx_row)
             return self._to_positive_coeff()
