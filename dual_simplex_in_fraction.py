@@ -84,9 +84,9 @@ class DualSimplexMethod:
         self.__rhs = [self.__row_0[-1]] +[__i[-1]  for __i in self.__rows]
         self.__basic_variables[leaving_idx_row + 1]=self.__variables[pivot_index]
 
-        print('-----------------------------------------------------------------------------------------------------')
+        print('-------------------------------------')
         print("Converting Decimal to Fraction for cutting plane method purpose")
-        print('----------------------------------------------------------------------------------------------------')
+        print('--------------------------------------')
 
 
         table_rows = [self.__variables] + [self.__row_0 + [self.__basic_variables[0]]] + \
@@ -97,7 +97,7 @@ class DualSimplexMethod:
         df.style.set_properties(**{'text-align': 'center'})
 
         print(df)
-        print('-----------------------------------------------------------------------------------------------------')
+        print('-----------------------------------------')
 
 
 
@@ -111,8 +111,10 @@ class DualSimplexMethod:
 
 
 
-S = [["w", "y1", "y2", "y3", "e1", "e2", "rhs", "bv"],
-                               [1,    1,    2,   0,    0,    0,     0,    "w"],
-                               [0,    -1,   2,  -1,    1,    0,     -4,   "e1"],
-                              [ 0,    -2,  -1,   1,    0,    1,     -6,    "e2"]]
+S =    [["w", "y1",  "y2", "e1",     "e2",           "e3",              "e4",      "rhs",            "bv"],
+       [1,    0,      0,      0,    Fraction(7, 9),    Fraction(10, 9),    0,    Fraction(337, 9),    "w"],
+       [0,    1,      0,      0,                0,         1,              0,                   5,   "y1"],
+       [0,    0,      1,      0  ,   Fraction(1, 9),   Fraction(-5, 9),     0,    Fraction(16, 9),    "y2"],
+       [0,    0,      0,      1 ,    Fraction(-1, 9),  Fraction(-13, 9),    0,    Fraction(11, 9),  "e1" ],
+       [0,    0,      0,      0,     Fraction(-1, 9),  Fraction(5, 9),     1,    Fraction(-7, 9),  "e4"]]
 DualSimplexMethod(S)
