@@ -71,7 +71,7 @@ class DualSimplexMethod:
         #print(pivot_row)
         pivot_index, pivot_element =self.__find_pivot_element(pivot_row)
         #print(pivot_index,pivot_element, leaving_idx_row)
-        pivot_row = [__i/pivot_element if __i != 0 else __i for __i in pivot_row ]
+        pivot_row = [Fraction(__i, pivot_element) if __i != 0 else __i for __i in pivot_row ]
 
         new_row_0 =self.__calculate_row_elementary_operation(pivot_row, self.__row_0, pivot_index, pivot_element)
         self.__row_0 = new_row_0
@@ -84,8 +84,10 @@ class DualSimplexMethod:
         self.__rhs = [self.__row_0[-1]] +[__i[-1]  for __i in self.__rows]
         self.__basic_variables[leaving_idx_row + 1]=self.__variables[pivot_index]
 
-
+        print('-----------------------------------------------------------------------------------------------------')
+        print("Converting Decimal to Fraction for cutting plane method purpose")
         print('----------------------------------------------------------------------------------------------------')
+
 
         table_rows = [self.__variables] + [self.__row_0 + [self.__basic_variables[0]]] + \
                      [__row + [self.__basic_variables[__index + 1]] for __index, __row in enumerate(self.__rows)]
